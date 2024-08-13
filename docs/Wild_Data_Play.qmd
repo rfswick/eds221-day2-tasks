@@ -1,0 +1,12 @@
+---
+title: "Mack Creek Salamander and Cutthroat Trout"
+author: "Rachel Swick"
+format: html
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(janitor)
+```
+
