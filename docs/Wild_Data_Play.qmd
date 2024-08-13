@@ -2,6 +2,8 @@
 title: "Mack Creek Salamander and Cutthroat Trout"
 author: "Rachel Swick"
 format: html
+warning: FALSE
+message: FALSE
 ---
 
 ```{r}
@@ -9,4 +11,57 @@ library(tidyverse)
 library(here)
 library(janitor)
 ```
+
+```{r}
+mack_verts <- read_csv(here::here("data", "AS00601.csv"))
+view(mack_verts)
+mack_verts <- mack_verts |> clean_names()
+names(mack_verts)
+```
+
+```{r}
+mc_wt_5 <- mack_verts$weight[5]
+mc_length_8_20 <- mack_verts$length1[8:20]
+mc_dates <- mack_verts$sampledate
+```
+
+```{r}
+mc_salamanders <- dplyr::filter(.data = mack_verts, species == "DITE")
+```
+
+```{r}
+ggplot(data = mc_salamanders, aes(x = weight, y = length1))+
+  geom_point(aes(color = "pink",
+                 alpha = 0.5))+
+  theme_minimal()+
+  labs(title = "Salamander Snout-Vent Length Versus Weight",
+       x = "Weight (grams)",
+       y = "Snout-Vent Length (mm)",
+       subtitle = "In two Reaches of Mack Creek",
+       caption = "Figure 1. Snout-vent lengths in milimeters versus weight in grams of salamander in two reaches of Mack Creek") +
+  theme(legend.position = "none")
+
+ggsave(here::here("figs", "salamander_size.png"), width = 6, height = 5)
+```
+
+```{r}
+mc_trout <- dplyr::filter(mack_verts, species == "ONCL")
+
+ggplot(data = mc_trout, aes(x = weight, y = length1, color = reach))+
+  geom_point()+
+  facet_wrap(~reach)+
+  theme(legend.position = "none")+
+  labs(title = "Cutthroat Snout-Vent Length Versus Weight",
+       x = "Weight (grams)",
+       y = "Snout-Vent Length (mm)")+
+  scale_color_manual(values = c(L = "orange", M = "blue", U = "magenta"))
+  
+
+ggsave(here::here("figs", "cutthroat_size.png"))
+```
+
+ 
+
+
+
 
